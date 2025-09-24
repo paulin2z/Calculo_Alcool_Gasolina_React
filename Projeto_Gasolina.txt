@@ -1,0 +1,147 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+
+const lightTheme = {
+  background '#f5f5f5',
+  text '#333',
+  inputBackground '#fff',
+  inputBorder '#aaa',
+  buttonResetColor '#888',
+  resultText '#2e7d32',
+  placeholder '#999',
+};
+
+const darkTheme = {
+  background '#121212',
+  text '#f5f5f5',
+  inputBackground '#1e1e1e',
+  inputBorder '#444',
+  buttonResetColor '#aaa',
+  resultText '#00e676',
+  placeholder '#aaa',
+};
+
+export default function CombustivelCalculo() {
+  const [gasolina, setGasolina] = useState('');
+  const [alcool, setAlcool] = useState('');
+  const [resultado, setResultado] = useState('');
+  const [temaEscuro, setTemaEscuro] = useState(false);
+
+  const theme = temaEscuro  darkTheme  lightTheme;
+  const styles = getStyles(theme);
+
+  function calcular() {
+    const precoGasolina = parseFloat(gasolina.replace(',', '.'));
+    const precoAlcool = parseFloat(alcool.replace(',', '.'));
+
+    if (isNaN(precoGasolina)  isNaN(precoAlcool)) {
+      setResultado('Por favor, escreva valores válidos!');
+      return;
+    }
+
+    const relacao = precoAlcool  precoGasolina;
+
+    if (relacao = 0.7) {
+      setResultado('É mais vantajoso usar Álcool');
+    } else {
+      setResultado('É mais vantajoso usar Gasolina');
+    }
+  }
+
+  function resetar() {
+    setGasolina('');
+    setAlcool('');
+    setResultado('');
+  }
+
+  return (
+    View style={styles.container}
+      View style={styles.toggleButton}
+        Button
+          title={temaEscuro  'Modo Claro'  'Modo Escuro'}
+          onPress={() = setTemaEscuro(!temaEscuro)}
+        
+      View
+
+      Text style={styles.label}Preço da Gasolina (R$)Text
+      TextInput
+        style={styles.input}
+        keyboardType=numeric
+        value={gasolina}
+        onChangeText={setGasolina}
+        placeholder=Ex 5.49
+        placeholderTextColor={theme.placeholder}
+      
+
+      Text style={styles.label}Preço do Álcool (R$)Text
+      TextInput
+        style={styles.input}
+        keyboardType=numeric
+        value={alcool}
+        onChangeText={setAlcool}
+        placeholder=Ex 3.79
+        placeholderTextColor={theme.placeholder}
+      
+
+      View style={styles.buttonContainer}
+        View style={styles.button}
+          Button title=Calcular onPress={calcular} 
+        View
+        View style={styles.button}
+          Button
+            title=Resetar
+            onPress={resetar}
+            color={theme.buttonResetColor}
+          
+        View
+      View
+
+      Text style={styles.resultado}{resultado}Text
+    View
+  );
+}
+
+const getStyles = (theme) =
+  StyleSheet.create({
+    container {
+      flex 1,
+      backgroundColor theme.background,
+      padding 50,
+      justifyContent 'center',
+    },
+    input {
+      borderWidth 1,
+      borderColor theme.inputBorder,
+      backgroundColor theme.inputBackground,
+      color theme.text,
+      padding 12,
+      marginVertical 10,
+      borderRadius 8,
+      fontSize 16,
+    },
+    label {
+      fontSize 16,
+      fontWeight '500',
+      color theme.text,
+      marginBottom 4,
+    },
+    buttonContainer {
+      flexDirection 'row',
+      justifyContent 'space-between',
+      marginVertical 20,
+    },
+    button {
+      flex 1,
+      marginHorizontal 5,
+    },
+    resultado {
+      marginTop 24,
+      fontWeight 'bold',
+      fontSize 18,
+      color theme.resultText,
+      textAlign 'center',
+    },
+    toggleButton {
+      marginBottom 20,
+    },
+  });
